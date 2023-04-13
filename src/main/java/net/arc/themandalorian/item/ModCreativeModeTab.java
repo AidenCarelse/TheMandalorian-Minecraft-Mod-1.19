@@ -10,7 +10,7 @@ public class ModCreativeModeTab
         @Override
         public ItemStack makeIcon()
         {
-            return new ItemStack(ModItems.BESKAR_BAR.get());
+            return new ItemStack(ModItems.MANDALORIAN_HELMET.get());
         }
     };
 }

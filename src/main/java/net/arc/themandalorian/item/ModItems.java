@@ -15,7 +15,7 @@ public class ModItems
     public static final RegistryObject<Item> BESKAR_BAR = ITEMS.register("beskar_bar",
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB)));
 
-    public static final RegistryObject<Item> RAW_BESKAR = ITEMS.register("raw_beskar",
+    public static final RegistryObject<Item> BESKAR_SCRAP = ITEMS.register("beskar_scrap",
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB)));
 
     public static void register(IEventBus eventBus)

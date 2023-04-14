@@ -9,5 +9,8 @@
 
   "block.themandalorian.deepslate_beskar_ore": "Deepslate Beskar Ore",
 
-  "itemGroup.the_mandalorian_tab": "The Mandalorian"
+  "itemGroup.the_mandalorian_tab": "The Mandalorian",
+
+  "key.category.themandalorian.mandalorian": "The Mandalorian",
+  "key.themandalorian.open_gadgets": "Open Gadgets Menu"
 }

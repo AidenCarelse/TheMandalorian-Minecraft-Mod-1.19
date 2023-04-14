@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#-",
+    "-#"
+  ],
+  "key": {
+    "#": {
+      "item": "themandalorian:beskar_scrap"
+    },
+    "-": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "themandalorian:beskar_bar"
+  }
+}

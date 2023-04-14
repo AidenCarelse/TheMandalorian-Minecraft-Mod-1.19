@@ -3,6 +3,8 @@ package net.arc.themandalorian;
 import com.mojang.logging.LogUtils;
 import net.arc.themandalorian.block.ModBlocks;
 import net.arc.themandalorian.item.ModItems;
+import net.arc.themandalorian.world.feature.ModConfiguredFeatures;
+import net.arc.themandalorian.world.feature.ModPlacedFeatures;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,6 +27,9 @@ public class TheMandalorian
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+
+        ModConfiguredFeatures.register(modEventBus);
+        ModPlacedFeatures.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 

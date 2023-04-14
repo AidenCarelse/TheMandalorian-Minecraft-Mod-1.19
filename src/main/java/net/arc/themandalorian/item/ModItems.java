@@ -19,16 +19,16 @@ public class ModItems
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB)));
 
     public static final RegistryObject<Item> MANDALORIAN_HELMET = ITEMS.register("mandalorian_helmet",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB)));
+            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB).stacksTo(1)));
 
     public static final RegistryObject<Item> MANDALORIAN_CHESTPLATE = ITEMS.register("mandalorian_chestplate",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB)));
+            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB).stacksTo(1)));
 
     public static final RegistryObject<Item> MANDALORIAN_LEGGINGS = ITEMS.register("mandalorian_leggings",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB)));
+            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB).stacksTo(1)));
 
     public static final RegistryObject<Item> MANDALORIAN_BOOTS = ITEMS.register("mandalorian_boots",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB)));
+            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB).stacksTo(1)));
 
     public static void register(IEventBus eventBus)
     {

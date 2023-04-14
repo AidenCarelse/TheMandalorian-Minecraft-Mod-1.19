@@ -1,6 +1,7 @@
 package net.arc.themandalorian;
 
 import com.mojang.logging.LogUtils;
+import net.arc.themandalorian.block.ModBlocks;
 import net.arc.themandalorian.item.ModItems;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -23,6 +24,7 @@ public class TheMandalorian
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 

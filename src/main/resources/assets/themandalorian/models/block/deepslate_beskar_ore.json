@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "themandalorian:block/deepslate_beskar_ore"
+  }
+}

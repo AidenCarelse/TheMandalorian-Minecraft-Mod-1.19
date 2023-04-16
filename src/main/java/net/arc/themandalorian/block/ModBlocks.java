@@ -1,6 +1,7 @@
 package net.arc.themandalorian.block;
 
 import net.arc.themandalorian.TheMandalorian;
+import net.arc.themandalorian.block.custom.MandalorianForgeBlock;
 import net.arc.themandalorian.item.ModCreativeModeTab;
 import net.arc.themandalorian.item.ModItems;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -25,6 +26,10 @@ public class ModBlocks
     public static final RegistryObject<Block> DEEPSLATE_BESKAR_ORE = registerBlock("deepslate_beskar_ore",
             () -> new DropExperienceBlock(BlockBehaviour.Properties.of(Material.AMETHYST).strength(6f).requiresCorrectToolForDrops(),
                     UniformInt.of(5, 9)), ModCreativeModeTab.THE_MANDALORIAN_TAB);
+
+    public static final RegistryObject<Block> MANDALORIAN_FORGE = registerBlock("mandalorian_forge",
+            () -> new MandalorianForgeBlock(BlockBehaviour.Properties.of(Material.METAL).strength(6f).requiresCorrectToolForDrops().noOcclusion())
+            , ModCreativeModeTab.THE_MANDALORIAN_TAB);
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab)
     {

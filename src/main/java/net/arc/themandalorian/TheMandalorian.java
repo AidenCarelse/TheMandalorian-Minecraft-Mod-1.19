@@ -2,9 +2,13 @@ package net.arc.themandalorian;
 
 import com.mojang.logging.LogUtils;
 import net.arc.themandalorian.block.ModBlocks;
+import net.arc.themandalorian.block.entity.ModBlockEntities;
 import net.arc.themandalorian.item.ModItems;
+import net.arc.themandalorian.screen.MandalorianForgeScreen;
+import net.arc.themandalorian.screen.ModMenuTypes;
 import net.arc.themandalorian.world.feature.ModConfiguredFeatures;
 import net.arc.themandalorian.world.feature.ModPlacedFeatures;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,6 +35,9 @@ public class TheMandalorian
         ModConfiguredFeatures.register(modEventBus);
         ModPlacedFeatures.register(modEventBus);
 
+        ModBlockEntities.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
+
         modEventBus.addListener(this::commonSetup);
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -48,7 +55,7 @@ public class TheMandalorian
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-
+            MenuScreens.register(ModMenuTypes.MANDALORIAN_FORGE_MENU.get(), MandalorianForgeScreen::new);
         }
     }
 }

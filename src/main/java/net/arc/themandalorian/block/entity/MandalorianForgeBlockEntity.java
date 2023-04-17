@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProvider
 {
-    private final ItemStackHandler itemHandler = new ItemStackHandler(5)
+    private final ItemStackHandler itemHandler = new ItemStackHandler(3)
     {
         @Override
         protected void onContentsChanged(int slot)
@@ -174,8 +174,8 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
         if(hasRecipe(pEntity))
         {
             pEntity.itemHandler.extractItem(1, 1, false);
-            pEntity.itemHandler.setStackInSlot(4, new ItemStack(ModItems.MANDALORIAN_HELMET.get(),
-                    pEntity.itemHandler.getStackInSlot(4).getCount() + 1));
+            pEntity.itemHandler.setStackInSlot(2, new ItemStack(ModItems.MANDALORIAN_HELMET.get(),
+                    pEntity.itemHandler.getStackInSlot(2).getCount() + 1));
 
             pEntity.resetProgress();
         }
@@ -204,11 +204,11 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
 
     private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack itemStack)
     {
-        return inventory.getItem(4).getItem() == itemStack.getItem() || inventory.getItem(4).isEmpty();
+        return inventory.getItem(2).getItem() == itemStack.getItem() || inventory.getItem(2).isEmpty();
     }
 
     private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory)
     {
-        return inventory.getItem(4).getMaxStackSize() > inventory.getItem(4).getCount();
+        return inventory.getItem(2).getMaxStackSize() > inventory.getItem(2).getCount();
     }
 }

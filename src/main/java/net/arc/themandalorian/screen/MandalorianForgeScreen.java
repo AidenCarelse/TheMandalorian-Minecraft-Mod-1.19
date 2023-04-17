@@ -42,7 +42,7 @@ public class MandalorianForgeScreen extends AbstractContainerScreen<MandalorianF
     {
         if(menu.isCrafting())
         {
-            blit(pPoseStack, x + 163, y + 16, 178, 0, 7, menu.getScaledProgress());
+            blit(pPoseStack, x + 163, y + 4, 177, 0, 7, menu.getScaledProgress());
         }
     }
 

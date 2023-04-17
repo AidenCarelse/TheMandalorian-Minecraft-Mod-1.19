@@ -1,0 +1,11 @@
+{
+  "type": "themandalorian:mandalorian_forging",
+  "ingredients": [
+    {
+      "item": "themandalorian:beskar_bar"
+    }
+  ],
+  "output": {
+    "item": "themandalorian:mandalorian_chestplate"
+  }
+}

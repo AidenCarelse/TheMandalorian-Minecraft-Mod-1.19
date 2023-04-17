@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.arc.themandalorian.block.ModBlocks;
 import net.arc.themandalorian.block.entity.ModBlockEntities;
 import net.arc.themandalorian.item.ModItems;
+import net.arc.themandalorian.recipe.ModRecipes;
 import net.arc.themandalorian.screen.MandalorianForgeScreen;
 import net.arc.themandalorian.screen.ModMenuTypes;
 import net.arc.themandalorian.world.feature.ModConfiguredFeatures;
@@ -37,6 +38,8 @@ public class TheMandalorian
 
         ModBlockEntities.register(modEventBus);
         ModMenuTypes.register(modEventBus);
+
+        ModRecipes.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 

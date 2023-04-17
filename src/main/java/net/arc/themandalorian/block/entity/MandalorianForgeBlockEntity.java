@@ -1,6 +1,7 @@
 package net.arc.themandalorian.block.entity;
 
 import net.arc.themandalorian.item.ModItems;
+import net.arc.themandalorian.recipe.MandalorianForgeRecipe;
 import net.arc.themandalorian.screen.MandalorianForgeMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,6 +25,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProvider
 {
@@ -171,10 +174,20 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
 
     private static void craftItem(MandalorianForgeBlockEntity pEntity)
     {
+        Level level = pEntity.level;
+
+        SimpleContainer inventory = new SimpleContainer(pEntity.itemHandler.getSlots());
+        for(int i=0; i< pEntity.itemHandler.getSlots(); i++)
+        {
+            inventory.setItem(i, pEntity.itemHandler.getStackInSlot(i));
+        }
+
+        Optional<MandalorianForgeRecipe> recipe = level.getRecipeManager().getRecipeFor(MandalorianForgeRecipe.Type.INSTANCE, inventory, level);
+
         if(hasRecipe(pEntity))
         {
             pEntity.itemHandler.extractItem(1, 1, false);
-            pEntity.itemHandler.setStackInSlot(2, new ItemStack(ModItems.MANDALORIAN_HELMET.get(),
+            pEntity.itemHandler.setStackInSlot(2, new ItemStack(recipe.get().getResultItem().getItem(),
                     pEntity.itemHandler.getStackInSlot(2).getCount() + 1));
 
             pEntity.resetProgress();
@@ -183,23 +196,30 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
 
     private static boolean hasRecipe(MandalorianForgeBlockEntity entity)
     {
+        Level level = entity.level;
+
         SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
         for(int i=0; i< entity.itemHandler.getSlots(); i++)
         {
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
 
-        int beskarInSlot2;
+        Optional<MandalorianForgeRecipe> recipe = level.getRecipeManager().getRecipeFor(MandalorianForgeRecipe.Type.INSTANCE, inventory, level);
+
+        return  recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
+                canInsertItemIntoOutputSlot(inventory, recipe.get().getResultItem());
+
+        /*int beskarInSlot1;
 
         if(entity.itemHandler.getStackInSlot(1).getItem() == ModItems.BESKAR_BAR.get())
         {
-            beskarInSlot2 = entity.itemHandler.getStackInSlot(1).getCount();
+            beskarInSlot1 = entity.itemHandler.getStackInSlot(1).getCount();
         } else {
-            beskarInSlot2 = -1;
+            beskarInSlot1 = -1;
         }
 
-        return  (beskarInSlot2 > 0) && canInsertAmountIntoOutputSlot(inventory) &&
-                canInsertItemIntoOutputSlot(inventory, new ItemStack(ModItems.MANDALORIAN_HELMET.get(), 1));
+        return  (beskarInSlot1 > 0) && canInsertAmountIntoOutputSlot(inventory) &&
+                canInsertItemIntoOutputSlot(inventory, new ItemStack(ModItems.MANDALORIAN_HELMET.get(), 1));*/
     }
 
     private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack itemStack)

@@ -1,6 +1,8 @@
 package net.arc.themandalorian.item;
 
 import net.arc.themandalorian.TheMandalorian;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -19,16 +21,16 @@ public class ModItems
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB)));
 
     public static final RegistryObject<Item> MANDALORIAN_HELMET = ITEMS.register("mandalorian_helmet",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB).stacksTo(1)));
+            () -> new ArmorItem(ModArmorMaterials.MANDALORIAN, EquipmentSlot.HEAD, new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB).stacksTo(1)));
 
     public static final RegistryObject<Item> MANDALORIAN_CHESTPLATE = ITEMS.register("mandalorian_chestplate",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB).stacksTo(1)));
+            () -> new ArmorItem(ModArmorMaterials.MANDALORIAN, EquipmentSlot.CHEST, new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB).stacksTo(1)));
 
     public static final RegistryObject<Item> MANDALORIAN_LEGGINGS = ITEMS.register("mandalorian_leggings",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB).stacksTo(1)));
+            () -> new ArmorItem(ModArmorMaterials.MANDALORIAN, EquipmentSlot.LEGS, new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB).stacksTo(1)));
 
     public static final RegistryObject<Item> MANDALORIAN_BOOTS = ITEMS.register("mandalorian_boots",
-            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB).stacksTo(1)));
+            () -> new ArmorItem(ModArmorMaterials.MANDALORIAN, EquipmentSlot.FEET, new Item.Properties().tab(ModCreativeModeTab.THE_MANDALORIAN_TAB).stacksTo(1)));
 
     public static void register(IEventBus eventBus)
     {

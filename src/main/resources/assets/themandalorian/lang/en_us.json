@@ -13,5 +13,8 @@
   "itemGroup.the_mandalorian_tab": "The Mandalorian",
 
   "key.category.themandalorian.mandalorian": "The Mandalorian",
-  "key.themandalorian.open_gadgets": "Open Gadgets Menu"
+  "key.themandalorian.open_gadgets": "Open Gadgets Menu",
+
+  "themandalorian.tooltip.liquid.amount.with.capacity": "%s / %s mB",
+  "themandalorian.tooltip.liquid.amount": "%s mB"
 }

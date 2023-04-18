@@ -1,6 +1,8 @@
 package net.arc.themandalorian.block.entity;
 
 import net.arc.themandalorian.item.ModItems;
+import net.arc.themandalorian.networking.ModMessages;
+import net.arc.themandalorian.networking.packet.FluidSyncS2CPacket;
 import net.arc.themandalorian.recipe.MandalorianForgeRecipe;
 import net.arc.themandalorian.screen.MandalorianForgeMenu;
 import net.minecraft.core.BlockPos;
@@ -15,12 +17,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -36,9 +43,51 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
         protected void onContentsChanged(int slot)
         {
             setChanged();
+
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            return switch (slot) {
+                //case 0 -> stack.getItem() == Items.LAVA_BUCKET;
+                case 0 -> stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
+                case 1 -> stack.getItem() == ModItems.BESKAR_BAR.get();
+                case 2 -> false;
+                default -> super.isItemValid(slot, stack);
+            };
         }
     };
 
+    private final FluidTank FLUID_TANK = new FluidTank(10000)
+    {
+        @Override
+        protected void onContentsChanged()
+        {
+            setChanged();
+            if(!level.isClientSide())
+            {
+                ModMessages.sendToClients(new FluidSyncS2CPacket(this.fluid, worldPosition));
+            }
+        }
+
+        @Override
+        public boolean isFluidValid(FluidStack stack)
+        {
+            return stack.getFluid() == Fluids.LAVA;
+        }
+    };
+
+    public void setFluid(FluidStack stack)
+    {
+        this.FLUID_TANK.setFluid(stack);
+    }
+
+    public FluidStack getFluidStack()
+    {
+        return this.FLUID_TANK.getFluid();
+    }
+
+    private LazyOptional<IFluidHandler> lazyFluidHandler = LazyOptional.empty();
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     protected  final ContainerData data;
@@ -100,6 +149,11 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
             return lazyItemHandler.cast();
         }
 
+        if(cap == ForgeCapabilities.FLUID_HANDLER)
+        {
+            return lazyFluidHandler.cast();
+        }
+
         return super.getCapability(cap, side);
     }
 
@@ -108,6 +162,7 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
     {
         super.onLoad();
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
+        lazyFluidHandler = LazyOptional.of(() -> FLUID_TANK);
     }
 
     @Override
@@ -115,6 +170,7 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
     {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
+        lazyFluidHandler.invalidate();
     }
 
     @Override
@@ -122,6 +178,7 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
     {
         nbt.put("inventory", itemHandler.serializeNBT());
         nbt.putInt("mandalorian_forge.progress", this.progress);
+        nbt = FLUID_TANK.writeToNBT(nbt);
 
         super.saveAdditional(nbt);
     }
@@ -132,6 +189,7 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         progress = nbt.getInt("mandalorian_forge.prorgess");
+        FLUID_TANK.readFromNBT(nbt);
     }
 
     public void drops()
@@ -152,7 +210,7 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
             return;
         }
 
-        if(hasRecipe(pEntity))
+        if(hasRecipe(pEntity) && hasEnoughFluid(pEntity))
         {
             pEntity.progress++;
             setChanged(level, blockPos, blockState);
@@ -165,6 +223,44 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
             pEntity.resetProgress();
             setChanged(level, blockPos, blockState);
         }
+
+        if(hasLavaBucketInSourceSlot(pEntity))
+        {
+            transferLavaToFluidTank(pEntity);
+        }
+    }
+
+    private static boolean hasEnoughFluid(MandalorianForgeBlockEntity pEntity)
+    {
+        return  pEntity.FLUID_TANK.getFluidAmount() >= 2000;
+    }
+
+    private static void transferLavaToFluidTank(MandalorianForgeBlockEntity pEntity)
+    {
+        pEntity.itemHandler.getStackInSlot(0).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(handler ->
+        {
+            int drainAmount = Math.min(pEntity.FLUID_TANK.getSpace(), 1000);
+
+            FluidStack stack = handler.drain(drainAmount, IFluidHandler.FluidAction.SIMULATE);
+            if(pEntity.FLUID_TANK.isFluidValid(stack))
+            {
+                stack = handler.drain(drainAmount, IFluidHandler.FluidAction.EXECUTE);
+                fillTankWithLava(pEntity, stack, handler.getContainer());
+            }
+        });
+    }
+
+    private static void fillTankWithLava(MandalorianForgeBlockEntity pEntity, FluidStack stack, ItemStack container)
+    {
+        pEntity.FLUID_TANK.fill(stack, IFluidHandler.FluidAction.EXECUTE);
+
+        pEntity.itemHandler.extractItem(0, 1, false);
+        pEntity.itemHandler.insertItem(0, container, false);
+    }
+
+    private static boolean hasLavaBucketInSourceSlot(MandalorianForgeBlockEntity pEntity)
+    {
+        return pEntity.itemHandler.getStackInSlot(0).getCount() > 0;
     }
 
     private void resetProgress()
@@ -186,6 +282,7 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
 
         if(hasRecipe(pEntity))
         {
+            pEntity.FLUID_TANK.drain(2000, IFluidHandler.FluidAction.EXECUTE);
             pEntity.itemHandler.extractItem(1, 1, false);
             pEntity.itemHandler.setStackInSlot(2, new ItemStack(recipe.get().getResultItem().getItem(),
                     pEntity.itemHandler.getStackInSlot(2).getCount() + 1));

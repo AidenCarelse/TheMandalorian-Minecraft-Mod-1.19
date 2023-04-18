@@ -2,6 +2,7 @@ package net.arc.themandalorian.screen;
 
 import net.arc.themandalorian.block.ModBlocks;
 import net.arc.themandalorian.block.entity.MandalorianForgeBlockEntity;
+import net.minecraft.commands.arguments.coordinates.Coordinates;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -10,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class MandalorianForgeMenu extends AbstractContainerMenu
@@ -17,6 +19,7 @@ public class MandalorianForgeMenu extends AbstractContainerMenu
     public final MandalorianForgeBlockEntity blockEntity;
     private final Level level;
     private final ContainerData data;
+    private FluidStack fluidStack;
 
     public MandalorianForgeMenu(int id, Inventory inv, FriendlyByteBuf extraData)
     {
@@ -30,6 +33,7 @@ public class MandalorianForgeMenu extends AbstractContainerMenu
         blockEntity = (MandalorianForgeBlockEntity) entity;
         this.level = inv.player.level;
         this.data = data;
+        this.fluidStack = blockEntity.getFluidStack();
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
@@ -133,5 +137,20 @@ public class MandalorianForgeMenu extends AbstractContainerMenu
         {
             this.addSlot(new Slot(playerInventory, i, 8+i*18, 142));
         }
+    }
+
+    public void setFluid(FluidStack fluidStack)
+    {
+        this.fluidStack = fluidStack;
+    }
+
+    public FluidStack getFluidStack()
+    {
+        return this.fluidStack;
+    }
+
+    public MandalorianForgeBlockEntity getBlockEntity()
+    {
+        return this.blockEntity;
     }
 }

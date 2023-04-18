@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.arc.themandalorian.block.ModBlocks;
 import net.arc.themandalorian.block.entity.ModBlockEntities;
 import net.arc.themandalorian.item.ModItems;
+import net.arc.themandalorian.networking.ModMessages;
 import net.arc.themandalorian.recipe.ModRecipes;
 import net.arc.themandalorian.screen.MandalorianForgeScreen;
 import net.arc.themandalorian.screen.ModMenuTypes;
@@ -48,7 +49,9 @@ public class TheMandalorian
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-
+        event.enqueueWork(() -> {
+            ModMessages.register();
+        });
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent

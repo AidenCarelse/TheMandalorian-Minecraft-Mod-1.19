@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public enum ModArmorMaterials implements ArmorMaterial
 {
-    MANDALORIAN("mandalorian", Integer.MAX_VALUE, new int[]{9, 18, 24, 9}, 0, SoundEvents.ARMOR_EQUIP_NETHERITE, 5.0F, 0.2F, () -> {
+    MANDALORIAN("mandalorian", 0, new int[]{9, 18, 24, 9}, 0, SoundEvents.ARMOR_EQUIP_NETHERITE, 5.0F, 0.2F, () -> {
         return Ingredient.of(ModItems.BESKAR_BAR.get()); });
 
     private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};

@@ -1,6 +1,7 @@
 package net.arc.themandalorian.integration;
 
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -15,6 +16,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
+
+import java.util.List;
 
 public class MandalorianForgeRecipeCategory implements IRecipeCategory<MandalorianForgeRecipe>
 {
@@ -53,6 +56,9 @@ public class MandalorianForgeRecipeCategory implements IRecipeCategory<Mandalori
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, MandalorianForgeRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 143, 7).addIngredients(recipe.getIngredients().get(0));
+        builder.addSlot(RecipeIngredientRole.INPUT, 86, 18).addIngredients(ForgeTypes.FLUID_STACK,
+                List.of(recipe.getFluid())). setFluidRenderer(1000, false, 6, 40);
+
         builder.addSlot(RecipeIngredientRole.OUTPUT, 143, 63).addItemStack(recipe.getResultItem());
     }
 }

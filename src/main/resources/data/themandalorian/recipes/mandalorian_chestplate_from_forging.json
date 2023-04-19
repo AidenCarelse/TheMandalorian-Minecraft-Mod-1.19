@@ -5,6 +5,10 @@
       "item": "themandalorian:beskar_bar"
     }
   ],
+  "fluid": {
+    "FluidName": "minecraft:lava",
+    "Amount": 200
+  },
   "output": {
     "item": "themandalorian:mandalorian_chestplate"
   }

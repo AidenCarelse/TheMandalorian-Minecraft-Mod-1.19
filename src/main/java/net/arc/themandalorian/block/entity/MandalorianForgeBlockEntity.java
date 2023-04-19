@@ -43,7 +43,6 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
         protected void onContentsChanged(int slot)
         {
             setChanged();
-
         }
 
         @Override
@@ -58,7 +57,7 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
         }
     };
 
-    private final FluidTank FLUID_TANK = new FluidTank(10000)
+    private final FluidTank FLUID_TANK = new FluidTank(1000)
     {
         @Override
         protected void onContentsChanged()
@@ -138,6 +137,8 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
     {
+        ModMessages.sendToClients(new FluidSyncS2CPacket(this.getFluidStack(), worldPosition));
+
         return new MandalorianForgeMenu(id, inventory, this, this.data);
     }
 
@@ -210,7 +211,7 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
             return;
         }
 
-        if(hasRecipe(pEntity) && hasEnoughFluid(pEntity))
+        if(hasRecipe(pEntity))
         {
             pEntity.progress++;
             setChanged(level, blockPos, blockState);
@@ -232,7 +233,7 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
 
     private static boolean hasEnoughFluid(MandalorianForgeBlockEntity pEntity)
     {
-        return  pEntity.FLUID_TANK.getFluidAmount() >= 2000;
+        return  pEntity.FLUID_TANK.getFluidAmount() >= 200;
     }
 
     private static void transferLavaToFluidTank(MandalorianForgeBlockEntity pEntity)
@@ -282,7 +283,7 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
 
         if(hasRecipe(pEntity))
         {
-            pEntity.FLUID_TANK.drain(2000, IFluidHandler.FluidAction.EXECUTE);
+            pEntity.FLUID_TANK.drain(recipe.get().getFluid().getAmount(), IFluidHandler.FluidAction.EXECUTE);
             pEntity.itemHandler.extractItem(1, 1, false);
             pEntity.itemHandler.setStackInSlot(2, new ItemStack(recipe.get().getResultItem().getItem(),
                     pEntity.itemHandler.getStackInSlot(2).getCount() + 1));
@@ -304,19 +305,9 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
         Optional<MandalorianForgeRecipe> recipe = level.getRecipeManager().getRecipeFor(MandalorianForgeRecipe.Type.INSTANCE, inventory, level);
 
         return  recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
-                canInsertItemIntoOutputSlot(inventory, recipe.get().getResultItem());
-
-        /*int beskarInSlot1;
-
-        if(entity.itemHandler.getStackInSlot(1).getItem() == ModItems.BESKAR_BAR.get())
-        {
-            beskarInSlot1 = entity.itemHandler.getStackInSlot(1).getCount();
-        } else {
-            beskarInSlot1 = -1;
-        }
-
-        return  (beskarInSlot1 > 0) && canInsertAmountIntoOutputSlot(inventory) &&
-                canInsertItemIntoOutputSlot(inventory, new ItemStack(ModItems.MANDALORIAN_HELMET.get(), 1));*/
+                canInsertItemIntoOutputSlot(inventory, recipe.get().getResultItem())
+                && recipe.get().getFluid().equals(entity.FLUID_TANK.getFluid())
+                && hasEnoughFluid(entity);
     }
 
     private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack itemStack)

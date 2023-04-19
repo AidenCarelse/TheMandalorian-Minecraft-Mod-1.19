@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.arc.themandalorian.TheMandalorian;
 import net.arc.themandalorian.screen.renderer.FluidTankRenderer;
 import net.arc.themandalorian.util.MouseUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -35,8 +36,7 @@ public class MandalorianForgeScreen extends AbstractContainerScreen<MandalorianF
 
     private void assignFluidRenderer()
     {
-        // Capacity much match block entity!
-        renderer = new FluidTankRenderer(10000, true, 6, 40);
+        renderer = new FluidTankRenderer(1000, true, 6, 40);
     }
 
     @Override
@@ -73,7 +73,43 @@ public class MandalorianForgeScreen extends AbstractContainerScreen<MandalorianF
         this.blit(stack, x, y, 0, 0, imageWidth, imageHeight);
         renderProgressArrow(stack, x, y);
 
+        renderForgeButton(stack, x, y, pMouseX, pMouseY);
+
         renderer.render(stack, x + 86, y + 18, menu.getFluidStack());
+    }
+
+    private void renderForgeButton(PoseStack pPoseStack, int x, int y, int pMouseX, int pMouseY)
+    {
+        boolean notInUse = !menu.isCrafting();
+        boolean sufficientFluid = menu.getFluidStack().getAmount() >= 200;
+        boolean outputSpace = !menu.getSlot(MandalorianForgeMenu.TE_INVENTORY_FIRST_SLOT_INDEX + 2).hasItem();
+        boolean validInput = menu.getSlot(MandalorianForgeMenu.TE_INVENTORY_FIRST_SLOT_INDEX + 1).getItem().getCount() > 0; //TEMP
+
+        boolean enabled = notInUse && sufficientFluid && outputSpace && validInput;
+
+        int offset = 2;
+        if (!enabled) {
+            offset = 34;
+        }
+        else if (MouseUtil.isMouseOver(pMouseX, pMouseY, x + 102, y + 45, 35, 15)) {
+            offset = 18;
+        }
+
+        blit(pPoseStack, x + 102, y + 45, 197, offset, 35, 15);
+    }
+
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton)
+    {
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+
+        if (MouseUtil.isMouseOver(pMouseX, pMouseY, x + 102, y + 45, 35, 15))
+        {
+            //changeButtonStatus(false);
+        }
+
+        return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
     private void renderProgressArrow(PoseStack pPoseStack, int x, int y)

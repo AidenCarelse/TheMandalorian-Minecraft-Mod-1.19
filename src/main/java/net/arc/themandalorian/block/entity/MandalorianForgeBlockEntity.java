@@ -3,6 +3,7 @@ package net.arc.themandalorian.block.entity;
 import net.arc.themandalorian.item.ModItems;
 import net.arc.themandalorian.networking.ModMessages;
 import net.arc.themandalorian.networking.packet.FluidSyncS2CPacket;
+import net.arc.themandalorian.networking.packet.ItemStackSyncS2CPacket;
 import net.arc.themandalorian.recipe.MandalorianForgeRecipe;
 import net.arc.themandalorian.screen.MandalorianForgeMenu;
 import net.minecraft.core.BlockPos;
@@ -43,6 +44,9 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
         protected void onContentsChanged(int slot)
         {
             setChanged();
+            if(!level.isClientSide()) {
+                ModMessages.sendToClients(new ItemStackSyncS2CPacket(this, worldPosition));
+            }
         }
 
         @Override
@@ -318,5 +322,23 @@ public class MandalorianForgeBlockEntity extends BlockEntity implements MenuProv
     private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory)
     {
         return inventory.getItem(2).getMaxStackSize() > inventory.getItem(2).getCount();
+    }
+
+    public ItemStack getRenderStack() {
+        ItemStack stack;
+
+        if(!itemHandler.getStackInSlot(2).isEmpty()) {
+            stack = itemHandler.getStackInSlot(2);
+        } else {
+            stack = itemHandler.getStackInSlot(1);
+        }
+
+        return stack;
+    }
+
+    public void setHandler(ItemStackHandler itemStackHandler) {
+        for (int i = 0; i < itemStackHandler.getSlots(); i++) {
+            itemHandler.setStackInSlot(i, itemStackHandler.getStackInSlot(i));
+        }
     }
 }

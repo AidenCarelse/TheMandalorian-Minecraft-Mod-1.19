@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.arc.themandalorian.TheMandalorian;
 import net.arc.themandalorian.screen.renderer.FluidTankRenderer;
 import net.arc.themandalorian.util.MouseUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -33,6 +32,8 @@ public class MandalorianForgeScreen extends AbstractContainerScreen<MandalorianF
         super.init();
         assignFluidRenderer();
     }
+
+    private void test() {}
 
     private void assignFluidRenderer()
     {
@@ -106,7 +107,7 @@ public class MandalorianForgeScreen extends AbstractContainerScreen<MandalorianF
 
         if (MouseUtil.isMouseOver(pMouseX, pMouseY, x + 102, y + 45, 35, 15))
         {
-            //changeButtonStatus(false);
+            menu.startForging();
         }
 
         return super.mouseClicked(pMouseX, pMouseY, pButton);

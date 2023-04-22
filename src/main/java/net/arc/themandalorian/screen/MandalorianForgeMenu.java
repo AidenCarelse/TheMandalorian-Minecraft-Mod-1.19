@@ -2,7 +2,7 @@ package net.arc.themandalorian.screen;
 
 import net.arc.themandalorian.block.ModBlocks;
 import net.arc.themandalorian.block.entity.MandalorianForgeBlockEntity;
-import net.minecraft.commands.arguments.coordinates.Coordinates;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -14,21 +14,24 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.SlotItemHandler;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class MandalorianForgeMenu extends AbstractContainerMenu
 {
     public final MandalorianForgeBlockEntity blockEntity;
     private final Level level;
-    private final ContainerData data;
+    public final ContainerData data;
     private FluidStack fluidStack;
 
     public MandalorianForgeMenu(int id, Inventory inv, FriendlyByteBuf extraData)
     {
-        this(id, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
+        this(id, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(3));
     }
 
     public MandalorianForgeMenu(int id, Inventory inv, BlockEntity entity, ContainerData data)
     {
         super(ModMenuTypes.MANDALORIAN_FORGE_MENU.get(), id);
+
         checkContainerSize(inv, 3);
         blockEntity = (MandalorianForgeBlockEntity) entity;
         this.level = inv.player.level;
@@ -48,6 +51,7 @@ public class MandalorianForgeMenu extends AbstractContainerMenu
         addDataSlots(data);
     }
 
+
     public boolean isCrafting()
     {
         return data.get(0) > 0;
@@ -60,6 +64,10 @@ public class MandalorianForgeMenu extends AbstractContainerMenu
         int progressArrowSize = 76; // This is the height in pixels of our arrow
 
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
+    }
+
+    public void startForging() {
+        this.data.set(2, 1);
     }
 
     // CREDIT GOES TO: diesieben07 I httes://github.com/diesieben07/SevenCommons

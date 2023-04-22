@@ -2,7 +2,10 @@ package net.arc.themandalorian;
 
 import com.mojang.logging.LogUtils;
 import net.arc.themandalorian.block.ModBlocks;
+import net.arc.themandalorian.block.entity.MandalorianForgeBlockEntity;
 import net.arc.themandalorian.block.entity.ModBlockEntities;
+import net.arc.themandalorian.entity.ModEntityTypes;
+import net.arc.themandalorian.entity.client.GroguRenderer;
 import net.arc.themandalorian.item.ModItems;
 import net.arc.themandalorian.networking.ModMessages;
 import net.arc.themandalorian.recipe.ModRecipes;
@@ -11,6 +14,7 @@ import net.arc.themandalorian.screen.ModMenuTypes;
 import net.arc.themandalorian.world.feature.ModConfiguredFeatures;
 import net.arc.themandalorian.world.feature.ModPlacedFeatures;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,6 +23,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+import software.bernie.geckolib3.GeckoLib;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(TheMandalorian.MOD_ID)
@@ -41,6 +46,9 @@ public class TheMandalorian
         ModMenuTypes.register(modEventBus);
 
         ModRecipes.register(modEventBus);
+        ModEntityTypes.register(modEventBus);
+
+        GeckoLib.initialize();
 
         modEventBus.addListener(this::commonSetup);
 
@@ -62,6 +70,7 @@ public class TheMandalorian
         public static void onClientSetup(FMLClientSetupEvent event)
         {
             MenuScreens.register(ModMenuTypes.MANDALORIAN_FORGE_MENU.get(), MandalorianForgeScreen::new);
+            EntityRenderers.register(ModEntityTypes.GROGU.get(), GroguRenderer::new);
         }
     }
 }

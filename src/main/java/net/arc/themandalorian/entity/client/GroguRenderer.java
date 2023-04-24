@@ -16,7 +16,7 @@ public class GroguRenderer extends GeoEntityRenderer<GroguEntity>
 {
     public GroguRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new GroguModel());
-        this.shadowRadius = 0.9f;
+        this.shadowRadius = 0.3f;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class GroguRenderer extends GeoEntityRenderer<GroguEntity>
                                     @Nullable MultiBufferSource renderTypeBuffer,
                                     @Nullable VertexConsumer vertexBuilder, int packedLightIn,
                                     ResourceLocation textureLocation) {
-        stack.scale(0.8f, 0.8f, 0.8f);
+        stack.scale(0.6f, 0.6f, 0.6f);
         return super.getRenderType(animatable, partialTicks, stack, renderTypeBuffer, vertexBuilder, packedLightIn, textureLocation);
     }
 }

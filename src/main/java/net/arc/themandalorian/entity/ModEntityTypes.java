@@ -18,7 +18,7 @@ public class ModEntityTypes
     public static final RegistryObject<EntityType<GroguEntity>> GROGU =
             ENTITY_TYPES.register("grogu",
                     () -> EntityType.Builder.of(GroguEntity::new, MobCategory.MONSTER)
-                            .sized(1f, 1f)
+                            .sized(0.5f, 0.5f)
                             .build(new ResourceLocation(TheMandalorian.MOD_ID, "grogu").toString()));
 
 

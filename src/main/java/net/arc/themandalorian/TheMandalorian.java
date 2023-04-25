@@ -15,6 +15,9 @@ import net.arc.themandalorian.world.feature.ModConfiguredFeatures;
 import net.arc.themandalorian.world.feature.ModPlacedFeatures;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -58,6 +61,9 @@ public class TheMandalorian
     private void commonSetup(final FMLCommonSetupEvent event)
     {
         event.enqueueWork(() -> {
+            SpawnPlacements.register(ModEntityTypes.GROGU.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    TamableAnimal::checkAnimalSpawnRules);
+
             ModMessages.register();
         });
     }

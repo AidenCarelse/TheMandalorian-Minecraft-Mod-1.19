@@ -18,6 +18,9 @@ public class ModMenuTypes
     public static final RegistryObject<MenuType<MandalorianForgeMenu>> MANDALORIAN_FORGE_MENU =
             registerMenuType(MandalorianForgeMenu::new, "mandalorian_forge_menu");
 
+    public static final RegistryObject<MenuType<MandalorianGadgetsMenu>> MANDALORIAN_GADGETS_MENU =
+            registerMenuType(MandalorianGadgetsMenu::new, "mandalorian_gadgets_menu");
+
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name)
     {
         return MENUS.register(name, () -> IForgeMenuType.create(factory));
